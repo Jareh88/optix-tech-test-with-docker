@@ -1,0 +1,6 @@
+{
+    "conventionalCommits.scopes": [
+        "movies"
+    ],
+    "editor.tabSize": 2
+}

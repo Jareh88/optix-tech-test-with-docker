@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - optix-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./frontend/.env.docker
+    networks:
+      - optix-network
+
+networks:
+  optix-network:
+    driver: bridge

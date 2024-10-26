@@ -1,0 +1,14 @@
+{
+  "name": "optix-tech-test",
+  "version": "1.0.0",
+  "scripts": {
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
