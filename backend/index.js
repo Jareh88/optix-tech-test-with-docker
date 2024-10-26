@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:8080", // Allow requests from the frontend container
+    origin: ["http://localhost:8080", "http://localhost:5173"], // Allow requests from the frontend container
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })

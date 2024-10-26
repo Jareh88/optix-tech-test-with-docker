@@ -34,8 +34,9 @@ Utilises Docker Compose in the root folder.
 
 If you want to run the backend and frontend locally without Docker:
 
+1. **Install**: Install modules for both frontend and backend with `npm run i:all`.
 1. **Backend**: Go to the backend folder, run `npm install`, then `npm start`.
-2. **Frontend**: Go to the frontend folder, run `npm install`, then `npm run dev`.
+1. **Frontend**: Go to the frontend folder, run `npm install`, then `npm run start`.
 
 The backend will be running at `http://localhost:3000`, and the frontend at `http://localhost:3001`.
 
