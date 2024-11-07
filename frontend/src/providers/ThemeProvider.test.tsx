@@ -1,7 +1,7 @@
-import React from "react";
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { useThemeMode, MainThemeProvider } from "./ThemeProvider";
+import { MainThemeProvider } from "./ThemeProvider";
+import { useThemeMode } from "./ThemeProviderExports";
 
 const TestComponent = () => {
   const { mode, setThemeMode } = useThemeMode();

@@ -1,7 +1,8 @@
 import { SortableTableHead } from "./SortableTableHead";
-import { Data, Order } from "../App";
+import { Data, MovieCompanyData, Order } from "../App";
 import { getComparator } from "../helpers/MUI";
 import { Checkbox, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import { giveAverage } from "../helpers/maths";
 
 interface SortableTableProps {
   rows: Data[];
@@ -13,7 +14,7 @@ interface SortableTableProps {
   handleSort: (property: keyof Data) => void;
 }
 
-export const SortableTable: React.FC<SortableTableProps> = ({
+export const SortableTable = ({
   rows,
   categories,
   selected,
@@ -21,7 +22,7 @@ export const SortableTable: React.FC<SortableTableProps> = ({
   order,
   orderBy,
   handleSort,
-}) => {
+}: SortableTableProps) => {
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data
@@ -31,10 +32,8 @@ export const SortableTable: React.FC<SortableTableProps> = ({
 
   const sortedRows = rows.sort((a: Data, b: Data) => {
     if (orderBy === "reviews") {
-      const avgA =
-        a.reviews.reduce((acc, val) => acc + val, 0) / a.reviews.length;
-      const avgB =
-        b.reviews.reduce((acc, val) => acc + val, 0) / b.reviews.length;
+      const avgA = giveAverage(a.reviews);
+      const avgB = giveAverage(b.reviews);
       return order === "asc" ? avgA - avgB : avgB - avgA;
     }
     return getComparator(order, orderBy)(a, b);
@@ -59,24 +58,19 @@ export const SortableTable: React.FC<SortableTableProps> = ({
               key={row.id}
               selected={isItemSelected}
               onClick={(event) => handleClick(event, row.id)}
-              sx={{ cursor: "pointer" }}
+              className="table-row"
             >
               <TableCell>
                 <Checkbox checked={isItemSelected} />
               </TableCell>
               <TableCell>{row.title}</TableCell>
+              <TableCell>{giveAverage(row.reviews).toFixed(1)}</TableCell>
               <TableCell>
-                {(
-                  row.reviews.reduce((acc: any, i: any) => acc + i, 0) /
-                  row.reviews.length
-                )
-                  .toFixed(1)
-                  ?.toString()
-                  .substring(0, 3)}{" "}
-              </TableCell>
-              <TableCell>
-                {categories &&
-                  categories.find((f: any) => f.id === row.filmCompanyId)?.name}
+                {
+                  categories?.find(
+                    (f: MovieCompanyData) => f.id === row.filmCompanyId
+                  )?.name
+                }
               </TableCell>
             </TableRow>
           );

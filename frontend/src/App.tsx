@@ -1,8 +1,3 @@
-import React, { useState } from "react";
-
-// Sorry I haven't used this, just used MUI fade as familiar
-// import { easeIn, easeOut } from "polished";
-
 // Noticed inclusion of redux but haven't used it in this instance.
 // If you'd like me show usage of it please let me know.
 // import { createReducer } from "@reduxjs/toolkit";
@@ -27,7 +22,7 @@ import {
 import { ErrorFallback } from "./components/ErrorFallback";
 import { MainThemeProvider } from "./providers/ThemeProvider";
 import { Header } from "./components/Header";
-import { handleApiError } from "./helpers/errors";
+import { initialSelectedRowState } from "./helpers/consts";
 
 export interface Data {
   id: string;
@@ -43,41 +38,14 @@ export interface MovieCompanyData {
   name: string;
 }
 
-type APIData = Data[] | MovieCompanyData[] | null;
-
 export type SelectedRow = string | null;
 
 export type Order = "asc" | "desc";
-
-export const optixApiGet = async <T extends APIData>(
-  url: string,
-  cb: React.Dispatch<React.SetStateAction<T>>,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-  setIsLoading(true);
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-    const data: T = await response.json();
-    cb(data);
-  } catch (error) {
-    handleApiError(error);
-  } finally {
-    setIsLoading(false);
-  }
-};
 
 export interface SelectedRowData {
   id: string | null;
   title: string;
 }
-
-export const initialSelectedRowState = { id: null, title: "No Movie Selected" };
-
-export const initialOrder = "asc";
-export const initialOrderByState = "title";
 
 export const App = () => {
   const {
@@ -86,23 +54,22 @@ export const App = () => {
     refetch: refetchMovies,
     error: moviesFetchError,
   } = useMovies();
+
   const {
     data: movieCompanies,
     isLoading: isLoadingCompanies,
     refetch: refetchMovieCompanies,
   } = useMovieCompanies();
+
   const { selectedRowData, setSelectedRowData, handleRowSelection } =
     useSelectedRow(initialSelectedRowState);
 
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const { order, setOrder, orderBy, setOrderBy, handleSort, resetSorting } =
-    useSorting();
+  const { order, orderBy, handleSort, resetSorting } = useSorting();
 
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
-    setSuccessMessage("");
     handleRowSelection(rows, id);
   };
-  console.log("Hello!");
+
   return (
     <MainThemeProvider>
       <CssBaseline />
@@ -136,8 +103,6 @@ export const App = () => {
           </Grid>
         </Box>
 
-        {/* There was some issue with a 500 error on some page refreshes I couldn't get to the bottom of...
-      Something to do with express on localhost perhaps? Too many requests at once? */}
         {moviesFetchError ? (
           <ErrorFallback errorMessage={moviesFetchError} />
         ) : isLoadingMovies || isLoadingCompanies ? (
@@ -160,8 +125,6 @@ export const App = () => {
         <ReviewSection
           selectedRowData={selectedRowData}
           setSelectedRowData={setSelectedRowData}
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
         />
       </Container>
     </MainThemeProvider>

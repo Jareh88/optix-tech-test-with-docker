@@ -1,4 +1,3 @@
-import React from "react";
 import { visuallyHidden } from "@mui/utils";
 import { Data, Order } from "../App";
 import {
@@ -46,11 +45,11 @@ interface SortableTableHeadProps {
   ) => void;
 }
 
-export const SortableTableHead: React.FC<SortableTableHeadProps> = ({
+export const SortableTableHead = ({
   order,
   orderBy,
   onRequestSort,
-}) => {
+}: SortableTableHeadProps) => {
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);

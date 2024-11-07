@@ -1,7 +1,14 @@
-export const ConditionalWrapper: React.FC<{
+interface ConditionalWrapperProps {
   condition: boolean;
-  wrapper: (children: React.ReactNode) => JSX.Element;
-  fallbackWrapper: (children: React.ReactNode) => JSX.Element;
+  wrapper: (children: React.ReactNode) => React.JSX.Element;
+  fallbackWrapper: (children: React.ReactNode) => React.JSX.Element;
   children: React.ReactNode;
-}> = ({ condition, wrapper, fallbackWrapper, children }) =>
+}
+
+export const ConditionalWrapper = ({
+  condition,
+  wrapper,
+  fallbackWrapper,
+  children,
+}: ConditionalWrapperProps) =>
   condition ? wrapper(children) : fallbackWrapper(children);

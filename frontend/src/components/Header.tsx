@@ -1,9 +1,7 @@
 import { Box } from "@mui/material";
 import ToggleThemeButton from "./ToggleThemeButton";
 
-interface HeaderProps {}
-
-export const Header: React.FC<HeaderProps> = ({}) => {
+export const Header = () => {
   return (
     <Box
       sx={{

@@ -1,4 +1,3 @@
-import React from "react";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import { ReviewSection } from "./ReviewSection";
@@ -14,8 +13,6 @@ describe("<ReviewSection>", () => {
       <ReviewSection
         selectedRowData={testRowData}
         setSelectedRowData={jest.fn()}
-        successMessage="Success"
-        setSuccessMessage={jest.fn()}
       />
     );
   });

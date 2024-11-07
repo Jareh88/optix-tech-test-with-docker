@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
-import ToggleThemeButton from "./ToggleThemeButton";
+import { Header } from "./Header";
 
-describe("<ToggleThemeButton>", () => {
+describe("<Header>", () => {
   it("should render component", () => {
-    render(<ToggleThemeButton />);
+    render(<Header />);
   });
   // Tests here
 });

@@ -5,26 +5,25 @@ interface RefreshButtonProps {
   resetSelection: () => void;
   resetSorting: () => void;
   isLoading: boolean;
-  refetchMovies: () => void;
-  refetchMovieCompanies: () => void;
+  refetchMovies: () => Promise<void>;
+  refetchMovieCompanies: () => Promise<void>;
 }
 
-export const RefreshButton: React.FC<RefreshButtonProps> = ({
+export const RefreshButton = ({
   buttonText,
   resetSelection,
   resetSorting,
   isLoading,
   refetchMovies,
   refetchMovieCompanies,
-}) => {
+}: RefreshButtonProps) => {
   return (
     <Button
       onClick={() => {
         resetSelection();
         resetSorting();
-        // Should probably combine these
-        refetchMovieCompanies();
-        refetchMovies();
+        void refetchMovieCompanies(); // void operator due to using safe promise, error handled internally in useFetch Data / fetchData
+        void refetchMovies();
       }}
       variant="contained"
       disabled={isLoading}

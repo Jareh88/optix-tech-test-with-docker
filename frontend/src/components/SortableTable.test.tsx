@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { SortableTable } from "./SortableTable";
@@ -30,10 +29,10 @@ describe("SortableTable Component", () => {
         rows={mockData}
         categories={[{ id: "1", name: "Mock Film Company" }]}
         selected={null}
-        handleClick={() => {}}
+        handleClick={jest.fn()}
         order="asc"
         orderBy="title"
-        handleSort={() => {}}
+        handleSort={jest.fn()}
       />
     );
 
@@ -51,7 +50,7 @@ describe("SortableTable Component", () => {
         handleClick={handleClick}
         order="asc"
         orderBy="title"
-        handleSort={() => {}}
+        handleSort={jest.fn()}
       />
     );
 

@@ -1,4 +1,4 @@
-import { Order } from "../App";
+import { Data, Order } from "../App";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -10,12 +10,12 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-export function getComparator<Key extends keyof any>(
+export function getComparator<Key extends keyof Data>(
   order: Order,
   orderBy: Key
 ): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
+  a: Record<Key, number | string>,
+  b: Record<Key, number | string>
 ) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)

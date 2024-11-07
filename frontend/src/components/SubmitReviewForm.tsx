@@ -5,7 +5,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useHandleSubmit } from "../hooks/customHooks";
 
@@ -14,16 +14,16 @@ interface FormData {
 }
 
 interface SubmitReviewFormProps {
-  successMessage: string | null;
-  setSuccessMessage: (message: string) => void;
   selectedRow: string | null;
 }
 
-export const SubmitReviewForm: React.FC<SubmitReviewFormProps> = ({
-  successMessage,
-  setSuccessMessage,
-  selectedRow,
-}) => {
+export const SubmitReviewForm = ({ selectedRow }: SubmitReviewFormProps) => {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSuccessMessage(null);
+  }, [selectedRow]);
+
   const {
     control,
     handleSubmit,
@@ -39,7 +39,12 @@ export const SubmitReviewForm: React.FC<SubmitReviewFormProps> = ({
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={(event) => {
+        const submitHandlerFunc = handleSubmit(onSubmit);
+        void submitHandlerFunc(event);
+      }}
+    >
       <Box>
         {/* 
           Would be a field with ID in the form, tying in state so we reset/save our input in progress per selection. 

@@ -1,21 +1,15 @@
 // Would normally split these out to their own files.
 import { useState, useEffect, useCallback } from "react";
-import {
-  Data,
-  initialOrder,
-  initialOrderByState,
-  MovieCompanyData,
-  Order,
-  SelectedRowData,
-} from "../App";
+import { Data, MovieCompanyData, Order, SelectedRowData } from "../App";
 import { UseFormSetError } from "react-hook-form";
 import { useBoolean } from "react-use";
-import { apiUrl } from "../helpers/api";
+import { apiUrl, initialOrder, initialOrderByState } from "../helpers/consts";
+import { handleApiError } from "../helpers/errors";
 
 export const useFetchData = <T,>(
   url: string,
   initialData: T,
-  dependencies: any[] = [] // add in dependencies so we can refetch easily from wherever when needed
+  disableFetchOnMount = false // Added option to not call hook on mount if wanting to add further use cases
 ) => {
   const [data, setData] = useState<T>(initialData);
   const [isLoading, toggleIsLoading] = useBoolean(false); // Can't believe I've never seen useBoolean before.
@@ -28,7 +22,7 @@ export const useFetchData = <T,>(
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-      const jsonData: T = await response.json();
+      const jsonData: T = (await response.json()) as T;
       setData(jsonData);
       setError(null);
     } catch (error) {
@@ -38,11 +32,20 @@ export const useFetchData = <T,>(
     } finally {
       toggleIsLoading(false);
     }
-  }, [url]);
+  }, [toggleIsLoading, url]);
 
+  // Fetching data once when the hook is used
+  // useEffect makes sense here, with the dependencies too. Reasoning: -
+  // 1) Side Effects & Lifecycle: Data fetching is a side effect that’s dependent on the lifecycle of the component (it should occur once, after the component mounts).
+  // 2) Control of Dependencies: The useEffect hook allows you to control the dependencies—in this case, fetching data only once on mount is critical.
+  // 3) Separation of Concerns: useEffect makes it clear that fetching data is a separate concern that should only happen at a specific point in the lifecycle, i.e., when the component is rendered for the first time.
+  // see: https://react.dev/learn/you-might-not-need-an-effect
+  // Initially had a parameter here to add dependencies to the useFetchData hook for flexibility, based on preferences of whatever team. But happy to remove it.
   useEffect(() => {
-    fetchData();
-  }, dependencies);
+    if (!disableFetchOnMount) {
+      void fetchData(); // void operator due to using safe promise, error handled internally above in fetchData
+    }
+  }, [disableFetchOnMount, fetchData]);
 
   return { data, isLoading, error, refetch: fetchData };
 };
@@ -94,6 +97,10 @@ interface FormData {
   review: string;
 }
 
+interface SubmitResponse {
+  message: string;
+}
+
 export const useHandleSubmit = (
   setSuccessMessage: (message: string) => void,
   setError: UseFormSetError<FormData>
@@ -113,10 +120,10 @@ export const useHandleSubmit = (
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-      const jsonData = await response.json();
+      const jsonData = (await response.json()) as SubmitResponse;
       setSuccessMessage(jsonData.message);
     } catch (error) {
-      // Should probably work this into its own area of state so we're not using mucky specific types
+      handleApiError(error);
       setError("root.serverError", {
         type: "manual",
         message: "Submission Error",

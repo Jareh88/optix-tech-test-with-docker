@@ -1,50 +1,18 @@
-import {
-  Box,
-  Fade,
-  Modal,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Fade, Modal, useMediaQuery, useTheme } from "@mui/material";
 import { ConditionalWrapper } from "./ConditionalWrapper";
-import { initialSelectedRowState, SelectedRowData } from "../App";
-import React from "react";
-import { SubmitReviewForm } from "./SubmitReviewForm";
+import { SelectedRowData } from "../App";
+import { ReviewContent } from "./ReviewContent";
+import { initialSelectedRowState } from "../helpers/consts";
 
 interface ReviewSectionProps {
   selectedRowData: SelectedRowData;
   setSelectedRowData: React.Dispatch<React.SetStateAction<SelectedRowData>>;
-  successMessage: string | null;
-  setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const renderReviewContent = (
-  selectedRowTitle: string,
-  selectedRow: string | null,
-  successMessage: string | null,
-  setSuccessMessage: (message: string) => void
-) => (
-  <>
-    <Typography variant="h4" component="h3">
-      {selectedRowTitle}
-    </Typography>
-    <Typography variant="h6" component="h4" mb="1rem">
-      Please leave a review below
-    </Typography>
-    <SubmitReviewForm
-      successMessage={successMessage}
-      setSuccessMessage={setSuccessMessage}
-      selectedRow={selectedRow}
-    />
-  </>
-);
-
-export const ReviewSection: React.FC<ReviewSectionProps> = ({
+export const ReviewSection = ({
   selectedRowData,
   setSelectedRowData,
-  successMessage,
-  setSuccessMessage,
-}) => {
+}: ReviewSectionProps) => {
   const theme = useTheme();
   const isSmallWindow = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -80,12 +48,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
           </Fade>
         )}
       >
-        {renderReviewContent(
-          selectedRowData.title,
-          selectedRowData.id,
-          successMessage,
-          setSuccessMessage
-        )}
+        <ReviewContent selectedRow={selectedRowData} />
       </ConditionalWrapper>
     </Box>
   );
