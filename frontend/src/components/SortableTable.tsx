@@ -3,10 +3,11 @@ import { Data, MovieCompanyData, Order } from "../App";
 import { getComparator } from "../helpers/MUI";
 import { Checkbox, Table, TableBody, TableCell, TableRow } from "@mui/material";
 import { giveAverage } from "../helpers/maths";
+import { findCompanyName } from "../helpers/data";
 
 interface SortableTableProps {
   rows: Data[];
-  categories: { id: string; name: string }[] | null;
+  categories: MovieCompanyData[] | null;
   selected: string | null;
   handleClick: (event: React.MouseEvent<unknown>, id: string) => void;
   order: Order;
@@ -66,11 +67,7 @@ export const SortableTable = ({
               <TableCell>{row.title}</TableCell>
               <TableCell>{giveAverage(row.reviews).toFixed(1)}</TableCell>
               <TableCell>
-                {
-                  categories?.find(
-                    (f: MovieCompanyData) => f.id === row.filmCompanyId
-                  )?.name
-                }
+                {findCompanyName(categories, row.filmCompanyId)}
               </TableCell>
             </TableRow>
           );
